@@ -1,0 +1,314 @@
+@import 'tailwindcss';
+
+/* ============================================================
+   Sistema de diseño · "Midnight Ledger"
+   Oscuro, moderno y sobrio. Esmeralda (haber) + coral (debe),
+   acentos dorados sutiles. Tipografía Bricolage Grotesque.
+   ============================================================ */
+
+:root {
+  --bg: #0b0c0f;
+  --bg-2: #0f1116;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-2: rgba(255, 255, 255, 0.065);
+  --surface-hi: rgba(255, 255, 255, 0.09);
+  --border: rgba(255, 255, 255, 0.09);
+  --border-hi: rgba(255, 255, 255, 0.16);
+
+  --text: #eceef2;
+  --text-soft: #9aa0ac;
+  --text-mute: #6b7280;
+  --title: #f6f7f9;
+
+  --income: #35d0a5;
+  --income-2: #6ee7c7;
+  --income-dim: rgba(53, 208, 165, 0.14);
+
+  --expense: #ff7a66;
+  --expense-2: #ff9e8f;
+  --expense-dim: rgba(255, 122, 102, 0.14);
+
+  --gold: #e4b95b;
+  --gold-2: #f2d38a;
+
+  --shadow-md: 0 18px 40px -24px rgba(0, 0, 0, 0.8);
+  --shadow-lg: 0 40px 80px -32px rgba(0, 0, 0, 0.9);
+
+  --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
+  --font-body: 'Plus Jakarta Sans', system-ui, sans-serif;
+
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
+}
+html {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  color: var(--text);
+  background: var(--bg);
+  overflow-x: hidden;
+}
+
+/* --- Fondo: aurora sobria + grano --- */
+.fondo-aurora {
+  position: fixed;
+  inset: 0;
+  z-index: -2;
+  overflow: hidden;
+  background:
+    radial-gradient(90% 60% at 85% -10%, rgba(53, 208, 165, 0.14), transparent 60%),
+    radial-gradient(80% 60% at 0% 110%, rgba(255, 122, 102, 0.12), transparent 60%),
+    radial-gradient(70% 50% at 50% 50%, rgba(228, 185, 91, 0.05), transparent 70%),
+    linear-gradient(180deg, var(--bg), var(--bg-2));
+}
+.fondo-aurora::before {
+  content: '';
+  position: absolute;
+  width: 46vw;
+  height: 46vw;
+  top: -12vw;
+  right: -6vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(53, 208, 165, 0.22), transparent 65%);
+  filter: blur(70px);
+  animation: flotar 20s ease-in-out infinite;
+}
+.fondo-aurora::after {
+  content: '';
+  position: absolute;
+  width: 42vw;
+  height: 42vw;
+  bottom: -16vw;
+  left: -10vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 122, 102, 0.16), transparent 65%);
+  filter: blur(80px);
+  animation: flotar 26s ease-in-out infinite reverse;
+}
+.grano {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+@keyframes flotar {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-2vw, 3vh) scale(1.06); }
+}
+
+/* --- Tipografía --- */
+.display {
+  font-family: var(--font-display);
+  letter-spacing: -0.02em;
+  line-height: 1.03;
+  color: var(--title);
+}
+.serif { font-family: var(--font-display); }
+.eyebrow {
+  font-family: var(--font-body);
+  text-transform: uppercase;
+  letter-spacing: 0.24em;
+  font-size: 0.66rem;
+  font-weight: 700;
+  color: var(--text-mute);
+}
+.numeros {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
+}
+
+/* --- Superficies --- */
+.tarjeta {
+  position: relative;
+  background: var(--surface);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid var(--border);
+  border-radius: 22px;
+  box-shadow: var(--shadow-md);
+}
+.tarjeta-plana {
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+}
+.hairline { border: 0; border-top: 1px solid var(--border); }
+
+/* filo superior sutil */
+.filo-oro::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto 0;
+  height: 1px;
+  border-radius: 22px 22px 0 0;
+  background: linear-gradient(90deg, transparent, var(--border-hi), transparent);
+}
+
+/* --- Botones --- */
+.btn {
+  font-family: var(--font-body);
+  font-weight: 600;
+  border-radius: 14px;
+  padding: 0.72rem 1.3rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.16s ease, box-shadow 0.18s ease, background 0.2s ease, border-color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-size: 0.92rem;
+  color: var(--text);
+}
+.btn:active { transform: translateY(1px) scale(0.99); }
+.btn-primario {
+  background: linear-gradient(135deg, var(--income-2), var(--income));
+  color: #04120d;
+  font-weight: 700;
+  box-shadow: 0 12px 26px -14px rgba(53, 208, 165, 0.9);
+}
+.btn-primario:hover { transform: translateY(-2px); }
+.btn-oro {
+  background: linear-gradient(135deg, var(--gold-2), var(--gold));
+  color: #241a05;
+  font-weight: 700;
+}
+.btn-oro:hover { transform: translateY(-2px); }
+.btn-fantasma {
+  background: var(--surface-2);
+  border-color: var(--border);
+  color: var(--text);
+}
+.btn-fantasma:hover { background: var(--surface-hi); border-color: var(--border-hi); }
+
+/* --- Inputs --- */
+.campo {
+  width: 100%;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.25);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 0.72rem 0.95rem;
+  transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+}
+.campo:focus {
+  outline: none;
+  background: rgba(0, 0, 0, 0.35);
+  border-color: var(--income);
+  box-shadow: 0 0 0 3px var(--income-dim);
+}
+.campo::placeholder { color: var(--text-mute); }
+.campo::-webkit-calendar-picker-indicator { filter: invert(0.7); cursor: pointer; }
+.etiqueta {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-soft);
+  margin-bottom: 0.4rem;
+}
+
+/* --- Chips --- */
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.42rem 0.8rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text-soft);
+  cursor: pointer;
+  transition: all 0.16s ease;
+}
+.chip:hover { border-color: var(--border-hi); color: var(--text); }
+.chip.activo-gasto {
+  background: var(--expense-dim);
+  color: var(--expense-2);
+  border-color: rgba(255, 122, 102, 0.4);
+}
+.chip.activo-ingreso {
+  background: var(--income-dim);
+  color: var(--income-2);
+  border-color: rgba(53, 208, 165, 0.4);
+}
+
+/* Colores de tipo */
+.txt-gasto { color: var(--expense-2); }
+.txt-ingreso { color: var(--income-2); }
+.punto-gasto { background: var(--expense); }
+.punto-ingreso { background: var(--income); }
+
+/* --- Animaciones --- */
+@keyframes aparecer {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.aparecer { animation: aparecer 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+
+@keyframes sacudir {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-9px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(4px); }
+}
+.sacudir { animation: sacudir 0.45s ease; }
+
+@keyframes flotarSuave {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+.flotar-suave { animation: flotarSuave 4s ease-in-out infinite; }
+
+.texto-oro {
+  background: linear-gradient(100deg, var(--gold), var(--gold-2), var(--gold));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: brillo 6s linear infinite;
+}
+@keyframes brillo {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
+}
+
+@keyframes parpadeo {
+  0%, 45% { opacity: 1; }
+  50%, 95% { opacity: 0.25; }
+  100% { opacity: 1; }
+}
+.parpadea { animation: parpadeo 1s step-end infinite; }
+
+/* Scrollbar */
+.scroll-fino::-webkit-scrollbar { width: 8px; height: 8px; }
+.scroll-fino::-webkit-scrollbar-thumb {
+  background: var(--surface-hi);
+  border-radius: 999px;
+}
+.scroll-fino::-webkit-scrollbar-track { background: transparent; }
+
+/* Bloqueo de scroll cuando hay modal */
+body.modal-abierto { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
