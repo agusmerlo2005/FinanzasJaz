@@ -11,6 +11,7 @@ import {
   listarMovimientos, agregarMovimiento, borrarMovimiento,
   leerPerfil, estaEnLaNube,
 } from './lib/api'
+import { leerCategorias } from './lib/categories'
 import { saludoPorHora } from './lib/time'
 
 export default function App() {
@@ -18,6 +19,7 @@ export default function App() {
     () => sessionStorage.getItem('jaz_auth') === '1',
   )
   const [perfil, setPerfil] = useState(leerPerfil)
+  const [categorias, setCategorias] = useState(leerCategorias)
   const [movimientos, setMovimientos] = useState([])
   const [cargando, setCargando] = useState(true)
   const saludo = saludoPorHora()
@@ -109,7 +111,7 @@ export default function App() {
         <div className="grid lg:grid-cols-[340px_1fr] gap-4 sm:gap-5 items-start">
           <aside className="space-y-4 sm:space-y-5 lg:sticky lg:top-6">
             <ProfileCard perfil={perfil} setPerfil={setPerfil} onSalir={salir} />
-            <AddTransaction onAgregar={agregar} />
+            <AddTransaction onAgregar={agregar} categorias={categorias} setCategorias={setCategorias} />
           </aside>
 
           <main className="space-y-4 sm:space-y-5">

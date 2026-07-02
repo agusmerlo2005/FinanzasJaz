@@ -1,27 +1,36 @@
-import { useState } from 'react'
-import { CATEGORIAS } from '../config'
+import { useEffect, useState } from 'react'
+import CategoryManager from './CategoryManager'
 
-export default function AddTransaction({ onAgregar }) {
+export default function AddTransaction({ onAgregar, categorias, setCategorias }) {
   const [tipo, setTipo] = useState('gasto')
   const [monto, setMonto] = useState('')
   const [concepto, setConcepto] = useState('')
-  const [categoria, setCategoria] = useState('comida')
+  const [categoria, setCategoria] = useState(() => categorias.gasto[0]?.id ?? '')
   const [guardando, setGuardando] = useState(false)
   const [ok, setOk] = useState(false)
+  const [gestionando, setGestionando] = useState(false)
 
-  const cats = CATEGORIAS[tipo]
+  const cats = categorias[tipo]
+
+  // Si la categoría elegida dejó de existir (la borraron/renombraron), reencuadra.
+  useEffect(() => {
+    if (!cats.some((c) => c.id === categoria)) {
+      setCategoria(cats[0]?.id ?? '')
+    }
+  }, [cats, categoria])
 
   function cambiarTipo(nuevo) {
     setTipo(nuevo)
-    setCategoria(CATEGORIAS[nuevo][0].id)
+    setCategoria(categorias[nuevo][0]?.id ?? '')
   }
 
   async function enviar(e) {
     e.preventDefault()
     const n = parseFloat(String(monto).replace(',', '.'))
     if (!n || n <= 0) return
-    setGuardando(true)
     const cat = cats.find((c) => c.id === categoria)
+    if (!cat) return
+    setGuardando(true)
     await onAgregar({
       tipo,
       monto: n,
@@ -98,7 +107,17 @@ export default function AddTransaction({ onAgregar }) {
 
       {/* Categorías (altura reservada para que la tarjeta no salte al cambiar de tipo) */}
       <div className="mb-5">
-        <label className="etiqueta">Categoría</label>
+        <div className="flex items-center justify-between mb-2">
+          <label className="etiqueta" style={{ marginBottom: 0 }}>Categoría</label>
+          <button
+            type="button"
+            onClick={() => setGestionando(true)}
+            className="text-xs font-bold transition"
+            style={{ color: 'var(--gold-2)', letterSpacing: '0.02em' }}
+          >
+            ⚙️ Editar categorías
+          </button>
+        </div>
         <div className="flex flex-wrap gap-2 content-start" style={{ minHeight: '9.5rem' }}>
           {cats.map((c) => (
             <button
@@ -110,6 +129,11 @@ export default function AddTransaction({ onAgregar }) {
               <span>{c.emoji}</span> {c.label}
             </button>
           ))}
+          {cats.length === 0 && (
+            <p className="text-sm italic" style={{ color: 'var(--text-soft)' }}>
+              Tocá “Editar categorías” para agregar una.
+            </p>
+          )}
         </div>
       </div>
 
@@ -125,6 +149,15 @@ export default function AddTransaction({ onAgregar }) {
       >
         {guardando ? 'Guardando…' : ok ? '¡Anotado! ✓' : `Agregar ${esGasto ? 'gasto' : 'ingreso'}`}
       </button>
+
+      {gestionando && (
+        <CategoryManager
+          tipoInicial={tipo}
+          categorias={categorias}
+          setCategorias={setCategorias}
+          onClose={() => setGestionando(false)}
+        />
+      )}
     </form>
   )
 }
