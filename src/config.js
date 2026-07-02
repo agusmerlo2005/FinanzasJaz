@@ -15,7 +15,7 @@ export const AUTH = {
 // para que los datos vayan a Google Sheets. Si lo dejás vacío, la app
 // funciona igual guardando todo en el navegador (modo local).
 // Ver instrucciones en INSTRUCCIONES.md
-export const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwuLU0LXJoSIVLzS8ABHHf52FAAoP9y9_FVUhYRjTPjyiH67q2Gezib_XsbQEBJtl2P/exec'
+export const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwI2I57loZHOT5SZsUzzvEGWJMcLC6X27Z7wERSOJF98IEbwQBRmZc2c7r7Rkeae0WgQA/exec'
 
 // --- Zona horaria ---
 export const TZ = 'America/Argentina/Buenos_Aires'

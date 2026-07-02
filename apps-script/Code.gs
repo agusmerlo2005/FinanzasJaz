@@ -2,27 +2,49 @@
  * Backend de "Finanzas de Jazmín" en Google Sheets.
  *
  * Cómo usarlo:
- *  1. Creá una Google Sheet nueva.
- *  2. Extensiones > Apps Script, pegá este código.
- *  3. Implementar > Nueva implementación > Aplicación web.
+ *  1. Creá una Google Sheet nueva y copiá su ID de la URL:
+ *       docs.google.com/spreadsheets/d/[ESTE-ES-EL-ID]/edit
+ *     Pegalo abajo en SHEET_ID.
+ *  2. Extensiones > Apps Script, pegá este código y GUARDÁ (💾).
+ *  3. La primera vez: ejecutá la función "probar" (menú de arriba) y
+ *     ACEPTÁ los permisos que pide Google.
+ *  4. Implementar > Nueva implementación > Aplicación web.
  *       - Ejecutar como: Yo
- *       - Quién tiene acceso: Cualquiera
- *  4. Copiá la URL (termina en /exec) y pegala en src/config.js (APPS_SCRIPT_URL).
+ *       - Quién tiene acceso: CUALQUIERA   <-- clave
+ *  5. Copiá la URL (/exec) y pegala en src/config.js (APPS_SCRIPT_URL).
  *
- * Crea automáticamente una pestaña "Movimientos" con encabezados.
+ *  Si editás el código después, tenés que "Gestionar implementaciones >
+ *  editar (lápiz) > Versión: Nueva versión" para que tome los cambios.
  */
+
+// 👇 PEGÁ ACÁ EL ID DE TU PLANILLA (lo que está entre /d/ y /edit)
+var SHEET_ID = 'PEGA_TU_ID_DE_PLANILLA_ACA'
 
 var HOJA = 'Movimientos'
 var ENCABEZADOS = ['id', 'fecha', 'tipo', 'monto', 'concepto', 'categoria', 'categoriaLabel', 'emoji']
 
+function getLibro() {
+  // Usa el ID si lo cargaste; si no, cae en la planilla contenedora.
+  if (SHEET_ID && SHEET_ID.indexOf('PEGA_TU_ID') === -1) {
+    return SpreadsheetApp.openById(SHEET_ID)
+  }
+  return SpreadsheetApp.getActiveSpreadsheet()
+}
+
 function getHoja() {
-  var ss = SpreadsheetApp.getActiveSpreadsheet()
+  var ss = getLibro()
   var sh = ss.getSheetByName(HOJA)
   if (!sh) {
     sh = ss.insertSheet(HOJA)
     sh.appendRow(ENCABEZADOS)
   }
   return sh
+}
+
+// Ejecutá esta función una vez para dar permisos y crear la pestaña.
+function probar() {
+  var sh = getHoja()
+  Logger.log('OK. Filas actuales: ' + sh.getLastRow())
 }
 
 function doGet(e) {
